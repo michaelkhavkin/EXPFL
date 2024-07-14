@@ -1,4 +1,5 @@
 from torch.utils.data import Dataset, DataLoader
+import numpy as np
 
 class ImageDataset(Dataset):
     def __init__(self, images_series, labels, transform=None):
@@ -16,3 +17,11 @@ class ImageDataset(Dataset):
         label = self.labels[idx]
 
         return image, label
+    
+def preprocess_img(img):
+    imp = img.numpy().transpose((1, 2, 0))
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    imp = std * imp + mean
+    imp = np.clip(imp, 0, 1)
+    return imp

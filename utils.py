@@ -29,6 +29,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 def build_model(args):
+    print(args.model)
     return getattr(models, args.model)(n_class=cfg.N_CLASS[args.dataset])  
 
 def build_criterion(args):

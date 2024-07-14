@@ -9,7 +9,7 @@ class BaseClient(object):
         self.model     = None
         self.trainset  = None
         self.testset   = None
-        self.save_path = f'./checkpoints/{self.exp_name}'
+        self.save_path = f'../checkpoints/{self.exp_name}'
         self.device    = 'cuda' if torch.cuda.is_available() else 'cpu'
         utils.ensure_path(self.save_path)
         

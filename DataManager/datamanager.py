@@ -7,10 +7,7 @@ import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 import requests
 from PIL import Image
-
-
 import warnings
-
 from data_utils import ImageDataset
 warnings.filterwarnings("ignore")
 
@@ -32,8 +29,8 @@ def FashionMNIST():
 def ECGHeartbeatCategorization():
     IMG_SIZE = 112
     root_dataset_dir = r'C:/Users/user/Datasets'
-    train_df = pd.read_csv("{}/{}/{}".format(dataset_dir_path, r'MIT_BIH', 'mitbih_train.csv.zip'), header=None)
-    test_df = pd.read_csv("{}/{}/{}".format(dataset_dir_path, r'MIT_BIH', 'mitbih_test.csv.zip'), header=None)
+    train_df = pd.read_csv("{}/{}/{}".format(root_dataset_dir, r'MIT_BIH', 'mitbih_train.csv.zip'), header=None)
+    test_df = pd.read_csv("{}/{}/{}".format(root_dataset_dir, r'MIT_BIH', 'mitbih_test.csv.zip'), header=None)
     X_train = train_df.loc[:,:186]
     y_train = np.array(train_df.loc[:,187:])
     X_test = test_df.loc[:,:186]
@@ -47,6 +44,22 @@ def ECGHeartbeatCategorization():
     train_dataset = ImageDataset(X_train, y_train, transform=transform)
     test_dataset = ImageDataset(X_test, y_test, transform=transform) 
     return train_dataset, test_dataset
+
+def ChestXRays():
+    root_dataset_dir = r'C:/Users/user/Datasets'
+    data_dir = os.path.join(root_dataset_dir, r"Xray_chest_scans/chest_xray")
+    transform = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    ])
+
+    train_images = datasets.ImageFolder(os.path.join(data_dir, "TRAIN"), transform) 
+    val_images = datasets.ImageFolder(os.path.join(data_dir, "VAL"), transform) 
+    test_images = datasets.ImageFolder(os.path.join(data_dir, "TEST"), transform) 
+    return train_images, test_images
+
 
 if __name__ == '__main__':
     MNIST_train = datasets.MNIST(root='../dataset', train=True, download=False, transform=transforms.ToTensor())

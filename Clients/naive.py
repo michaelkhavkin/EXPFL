@@ -12,20 +12,23 @@ from DataManager import datamanager
 class NaiveClient(Clients.BaseClient):
     def __init__(self, args, name, dm):
         super(NaiveClient, self).__init__(args, name)
-        self.setup()
+        self.setup(dm)
         
-    def setup(self):
+    def setup(self, dm):
         self.model       = utils.build_model(self.args)
         self.model.to(self.device)
         self.criterion   = nn.CrossEntropyLoss()
         self.optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.args.lr)
-        self.trainset, self.testset = self.dm()
+        self.trainset, self.testset = dm()
         self.trainloader = torch.utils.data.DataLoader(self.trainset, batch_size=self.args.batch_size, shuffle=True , drop_last=True )
         self.testloader  = torch.utils.data.DataLoader(self.testset , batch_size=self.args.batch_size, shuffle=False, drop_last=False)
     
     def train(self):
         self.model.train()
         for idx, (data, target) in enumerate(self.trainloader):
+            print(len(self.trainloader))
+            if idx % 5 == 0:
+                print("Training data instance {}".format(idx))
             data, target = data.to(self.device), target.to(self.device)
             self.optimizer.zero_grad()
             outputs = self.model(data)
