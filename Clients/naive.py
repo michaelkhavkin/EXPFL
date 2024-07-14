@@ -10,7 +10,7 @@ import Clients
 from DataManager import datamanager
 
 class NaiveClient(Clients.BaseClient):
-    def __init__(self, args, name):
+    def __init__(self, args, name, dm):
         super(NaiveClient, self).__init__(args, name)
         self.setup()
         
@@ -19,7 +19,7 @@ class NaiveClient(Clients.BaseClient):
         self.model.to(self.device)
         self.criterion   = nn.CrossEntropyLoss()
         self.optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.args.lr)
-        self.trainset, self.testset = datamanager.MNIST()
+        self.trainset, self.testset = self.dm()
         self.trainloader = torch.utils.data.DataLoader(self.trainset, batch_size=self.args.batch_size, shuffle=True , drop_last=True )
         self.testloader  = torch.utils.data.DataLoader(self.testset , batch_size=self.args.batch_size, shuffle=False, drop_last=False)
     
